@@ -1,6 +1,8 @@
 # Sesión — registro de entrenamiento
 
 App web (PWA) para registrar sesiones de gimnasio con split Push / Pull / Legs.
+
+**App en línea:** https://miguelromancl.github.io/gymlog/ (se despliega sola con cada push a `main`).
 Catálogo de ejercicios basado en las máquinas y áreas habituales de Smart Fit.
 
 ## Correr en local
