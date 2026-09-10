@@ -1,0 +1,9 @@
+{
+  "name": "Sesión — registro de entrenamiento",
+  "short_name": "Sesión",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#E9EAEC",
+  "theme_color": "#E9EAEC",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
