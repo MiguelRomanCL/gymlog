@@ -149,3 +149,44 @@ main { flex: 1; padding: 16px 16px calc(84px + env(safe-area-inset-bottom)); dis
 .rest b { font-family: var(--display); font-size: 20px; font-weight: 700; margin-right: 6px; font-variant-numeric: tabular-nums; }
 .rest.is-over { background: var(--legs); }
 .banner { background: var(--accent); color: #fff; padding: 10px 16px; font-size: 14px; text-align: center; }
+
+/* ---- Tipo de sesión + cronómetro ---- */
+.day-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.type-chips { display: flex; gap: 6px; }
+.type-chips button { padding: 7px 12px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--muted); background: var(--surface); border: 1px solid var(--line); }
+.type-chips button.is-on { background: var(--c); border-color: var(--c); color: #fff; }
+.timer { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.timer-main { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.timer-main b { font-family: var(--display); font-size: 18px; font-weight: 700; min-width: 44px; text-align: left; }
+.timer-ico { font-size: 11px; color: var(--muted); width: 14px; text-align: center; }
+.timer.is-running .timer-main { background: var(--ink); border-color: var(--ink); color: #fff; }
+.timer.is-running .timer-ico { color: #4FBC8A; }
+.timer-reset { width: 30px; height: 30px; border-radius: 50%; color: var(--muted); font-size: 18px; display: grid; place-items: center; }
+
+/* ---- Cobertura muscular ---- */
+.coverage { display: flex; flex-direction: column; gap: 12px; margin-bottom: 10px; }
+.cov-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.cov-head .muted b { color: var(--ink); font-weight: 700; }
+.seg.small { flex: 0 0 auto; }
+.seg.small button { padding: 6px 12px; font-size: 13px; white-space: nowrap; }
+.bodies { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: var(--surface); border-radius: var(--r); padding: 14px 10px 8px; }
+.body { margin: 0; text-align: center; }
+.body svg { width: 100%; max-width: 150px; height: auto; display: block; margin: 0 auto; }
+.body figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.body-base { fill: #DDE0E4; }
+.body-m { fill: #C9CDD2; stroke: var(--surface); stroke-width: 1; transition: fill .2s; }
+.body-m.lvl-1 { fill: #9ED9BE; }
+.body-m.lvl-2 { fill: #4FBC8A; }
+.body-m.lvl-3 { fill: var(--legs); }
+.cov-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; font-size: 12px; color: var(--muted); }
+.cov-legend i, .cov-bar i { display: inline-block; border-radius: 3px; }
+.cov-legend i { width: 12px; height: 12px; margin-right: 5px; vertical-align: -2px; }
+.lvl-0 { background: #C9CDD2; } .lvl-1 { background: #9ED9BE; } .lvl-2 { background: #4FBC8A; } .lvl-3 { background: var(--legs); }
+.cov-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border-radius: var(--r); font-size: 14px; }
+.cov-list li { display: grid; grid-template-columns: 118px 1fr 74px; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--bg); }
+.cov-list li:last-child { border-bottom: 0; }
+.cov-bar { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; display: block; }
+.cov-bar i { height: 100%; display: block; min-width: 0; }
+.cov-meta { text-align: right; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.cov-list li.is-missing .cov-name { color: var(--muted); }
+.cov-list li.is-missing .cov-meta { color: var(--accent); }

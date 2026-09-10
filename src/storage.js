@@ -1,4 +1,4 @@
-import { DEFAULT_TEMPLATES, EX_BY_ID } from './data/exercises'
+import { DEFAULT_TEMPLATES, TEMPLATES_VERSION, EX_BY_ID } from './data/exercises'
 
 const KEY = 'sesion:v1'
 
@@ -26,6 +26,15 @@ function cleanRow(r) {
 }
 
 const ISO = /^\d{4}-\d{2}-\d{2}$/
+const MAX_RUNNING_MS = 4 * 3600 * 1000 // un cronómetro olvidado corriendo más de 4 h se detiene solo
+
+function cleanTimer(t) {
+  const acc = t && typeof t === 'object' ? Math.max(0, Math.floor(num(t.acc))) : 0
+  let startedAt = t && typeof t === 'object' && Number.isFinite(t.startedAt) ? t.startedAt : null
+  if (startedAt !== null && (startedAt > Date.now() || Date.now() - startedAt > MAX_RUNNING_MS)) startedAt = null
+  return { startedAt, acc }
+}
+
 function cleanWorkout(w) {
   if (!w || typeof w !== 'object' || !ISO.test(w.date || '')) return null
   return {
@@ -34,18 +43,31 @@ function cleanWorkout(w) {
     type: ['push', 'pull', 'legs', 'otro'].includes(w.type) ? w.type : 'otro',
     note: typeof w.note === 'string' ? w.note : '',
     exercises: Array.isArray(w.exercises) ? w.exercises.map(cleanRow).filter(Boolean) : [],
+    timer: cleanTimer(w.timer),
   }
 }
 
+// Segundos transcurridos del cronómetro de sesión.
+export function timerElapsed(timer, now = Date.now()) {
+  if (!timer) return 0
+  return timer.acc + (timer.startedAt ? Math.floor((now - timer.startedAt) / 1000) : 0)
+}
+export function fmtClock(sec) {
+  sec = Math.max(0, Math.floor(sec))
+  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60
+  return (h ? `${h}:${String(m).padStart(2, '0')}` : String(m)) + ':' + String(s).padStart(2, '0')
+}
+
 export function normalize(parsed) {
-  const out = { workouts: [], templates: { ...DEFAULT_TEMPLATES } }
+  const out = { workouts: [], templates: { ...DEFAULT_TEMPLATES }, tv: TEMPLATES_VERSION }
   if (parsed && typeof parsed === 'object') {
     const seen = new Set()
     for (const w of Array.isArray(parsed.workouts) ? parsed.workouts : []) {
       const c = cleanWorkout(w)
       if (c && !seen.has(c.date)) { seen.add(c.date); out.workouts.push(c) } // una sesión por día
     }
-    if (parsed.templates && typeof parsed.templates === 'object') {
+    // Rutinas guardadas con una versión vieja se reemplazan por las nuevas por defecto.
+    if (parsed.tv === TEMPLATES_VERSION && parsed.templates && typeof parsed.templates === 'object') {
       for (const k of Object.keys(out.templates)) {
         if (Array.isArray(parsed.templates[k])) out.templates[k] = [...new Set(parsed.templates[k].filter((id) => typeof id === 'string' && EX_BY_ID[id]))]
       }

@@ -24,10 +24,11 @@ export const EXERCISES = [
   { id: 'tricep-machine', name: 'Tricep press (máquina)', group: 'push', muscle: 'Tríceps', kind: 'maquina' },
   { id: 'overhead-tricep', name: 'Extensión de tríceps sobre cabeza', group: 'push', muscle: 'Tríceps', kind: 'polea' },
   { id: 'skullcrusher', name: 'Press francés', group: 'push', muscle: 'Tríceps', kind: 'libre' },
+  { id: 'tricep-dip-machine', name: 'Fondos de tríceps (máquina)', group: 'push', muscle: 'Tríceps', kind: 'maquina' },
 
   // ---- PULL ----
   { id: 'lat-pulldown', name: 'Jalón al pecho (lat pulldown)', group: 'pull', muscle: 'Espalda', kind: 'polea' },
-  { id: 'lat-pulldown-close', name: 'Jalón agarre cerrado', group: 'pull', muscle: 'Espalda', kind: 'polea' },
+  { id: 'lat-pulldown-close', name: 'Jalón con triángulo (pulldown cerrado)', group: 'pull', muscle: 'Espalda', kind: 'polea' },
   { id: 'pullup-assisted', name: 'Dominadas asistidas (máquina)', group: 'pull', muscle: 'Espalda', kind: 'maquina' },
   { id: 'pullup', name: 'Dominadas', group: 'pull', muscle: 'Espalda', kind: 'peso corporal' },
   { id: 'seated-row', name: 'Remo sentado en polea', group: 'pull', muscle: 'Espalda', kind: 'polea' },
@@ -45,10 +46,12 @@ export const EXERCISES = [
   { id: 'preacher-curl', name: 'Curl predicador (máquina)', group: 'pull', muscle: 'Bíceps', kind: 'maquina' },
   { id: 'cable-curl', name: 'Curl en polea', group: 'pull', muscle: 'Bíceps', kind: 'polea' },
   { id: 'hammer-curl', name: 'Curl martillo', group: 'pull', muscle: 'Bíceps', kind: 'libre' },
+  { id: 'bicep-machine', name: 'Curl de bíceps (máquina)', group: 'pull', muscle: 'Bíceps', kind: 'maquina' },
   { id: 'shrug', name: 'Encogimientos', group: 'pull', muscle: 'Trapecio', kind: 'libre' },
 
   // ---- LEGS ----
   { id: 'leg-press', name: 'Prensa 45°', group: 'legs', muscle: 'Cuádriceps', kind: 'maquina' },
+  { id: 'leg-press-horizontal', name: 'Sentadilla en máquina (prensa horizontal)', group: 'legs', muscle: 'Cuádriceps', kind: 'maquina' },
   { id: 'hack-squat', name: 'Hack squat', group: 'legs', muscle: 'Cuádriceps', kind: 'maquina' },
   { id: 'smith-squat', name: 'Sentadilla en Smith', group: 'legs', muscle: 'Cuádriceps', kind: 'maquina' },
   { id: 'bb-squat', name: 'Sentadilla con barra', group: 'legs', muscle: 'Cuádriceps', kind: 'libre' },
@@ -67,6 +70,7 @@ export const EXERCISES = [
   { id: 'adductor', name: 'Aductores (máquina)', group: 'legs', muscle: 'Aductores', kind: 'maquina' },
   { id: 'calf-seated', name: 'Gemelos sentado (máquina)', group: 'legs', muscle: 'Pantorrilla', kind: 'maquina' },
   { id: 'calf-standing', name: 'Gemelos de pie', group: 'legs', muscle: 'Pantorrilla', kind: 'maquina' },
+  { id: 'calf-horizontal', name: 'Gemelos en máquina horizontal', group: 'legs', muscle: 'Pantorrilla', kind: 'maquina' },
   { id: 'calf-leg-press', name: 'Gemelos en prensa', group: 'legs', muscle: 'Pantorrilla', kind: 'maquina' },
 
   // ---- CORE ----
@@ -85,11 +89,13 @@ export const DAY_TYPES = {
   otro: { label: 'Otro', long: 'Sesión libre', color: '#6B7078' },
 }
 
-// Plantillas iniciales (editables desde la app).
+// Plantillas iniciales (editables desde la app). Los clásicos van primero.
+// Subir TEMPLATES_VERSION reemplaza las rutinas guardadas en el dispositivo por estas.
+export const TEMPLATES_VERSION = 2
 export const DEFAULT_TEMPLATES = {
-  push: ['chest-press', 'db-incline', 'pec-fly', 'shoulder-press-machine', 'db-lateral-raise', 'tricep-pushdown', 'overhead-tricep'],
-  pull: ['lat-pulldown', 'seated-row', 'row-machine', 'rear-delt-fly', 'face-pull', 'db-curl', 'hammer-curl'],
-  legs: ['leg-press', 'hack-squat', 'leg-extension', 'leg-curl-lying', 'rdl', 'hip-thrust', 'calf-seated'],
+  push: ['shoulder-press-machine', 'chest-press', 'tricep-dip-machine', 'db-incline', 'pec-fly', 'db-lateral-raise', 'tricep-pushdown'],
+  pull: ['pullup', 'row-machine', 'lat-pulldown-close', 'bb-curl', 'bicep-machine', 'tricep-machine', 'lat-pulldown', 'face-pull', 'hammer-curl'],
+  legs: ['abductor', 'adductor', 'leg-press-horizontal', 'calf-horizontal', 'leg-extension', 'leg-curl-seated', 'hip-thrust', 'rdl'],
   otro: [],
 }
 

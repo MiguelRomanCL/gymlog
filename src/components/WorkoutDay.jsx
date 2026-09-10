@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { DAY_TYPES, EX_BY_ID } from '../data/exercises'
-import { bestSet, fmtDate, uid, cap, num, setIsValid, sanitizeDecimal, sanitizeInt } from '../storage'
+import { bestSet, fmtDate, uid, cap, num, setIsValid, sanitizeDecimal, sanitizeInt, timerElapsed, fmtClock } from '../storage'
 import ExercisePicker from './ExercisePicker'
 
 const ORDER = ['push', 'pull', 'legs']
@@ -33,7 +33,17 @@ function hasData(row) { return row.sets.some((s) => s.kg || s.reps) }
 export default function WorkoutDay({ date, workout, workouts, templates, onChange, onDelete }) {
   const [picker, setPicker] = useState(null) // null | { mode: 'add' } | { mode: 'swap', rowId, exId }
   const [rest, setRest] = useState(null) // segundos restantes o null
+  const [now, setNow] = useState(Date.now())
   const listRef = useRef(null)
+
+  // Cronómetro de sesión: tic por segundo mientras corre
+  const running = !!workout?.timer?.startedAt
+  useEffect(() => {
+    if (!running) return
+    setNow(Date.now())
+    const t = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(t)
+  }, [running])
 
   // Descanso: cuenta regresiva
   useEffect(() => {
@@ -47,7 +57,7 @@ export default function WorkoutDay({ date, workout, workouts, templates, onChang
   useEffect(() => { setPicker(null); setRest(null) }, [date])
 
   const rowsFromTemplate = (type) => (templates[type] || []).filter((id) => EX_BY_ID[id]).map((exId) => ({ rowId: uid(), exId, plannedId: null, sets: [emptySet()] }))
-  const start = (type, exercises) => onChange({ id: uid(), date, type, note: '', exercises: exercises ?? rowsFromTemplate(type) })
+  const start = (type, exercises) => onChange({ id: uid(), date, type, note: '', exercises: exercises ?? rowsFromTemplate(type), timer: { startedAt: null, acc: 0 } })
 
   if (!workout) {
     const suggested = suggestType(workouts, date)
@@ -111,9 +121,17 @@ export default function WorkoutDay({ date, workout, workouts, templates, onChang
     update({ exercises: workout.exercises.filter((r) => r.rowId !== row.rowId) })
   }
 
+  const timer = workout.timer || { startedAt: null, acc: 0 }
+  const elapsed = timerElapsed(timer, now)
+  const timerToggle = () => update({ timer: timer.startedAt ? { startedAt: null, acc: timerElapsed(timer) } : { ...timer, startedAt: Date.now() } })
+  const timerReset = () => { if (elapsed < 60 || confirm('¿Reiniciar el cronómetro de la sesión?')) update({ timer: { startedAt: null, acc: 0 } }) }
+
   const toggleDone = (rowId, i, s) => {
     const done = !s.done
-    updateSet(rowId, i, { done })
+    const patch = { exercises: workout.exercises.map((r) => (r.rowId === rowId ? { ...r, sets: r.sets.map((x, j) => (j === i ? { ...x, done } : x)) } : r)) }
+    // La primera serie hecha arranca el cronómetro si nunca se inició
+    if (done && !timer.startedAt && timer.acc === 0) patch.timer = { startedAt: Date.now(), acc: 0 }
+    update(patch)
     setRest(done ? REST_SECONDS : null)
   }
 
@@ -141,15 +159,27 @@ export default function WorkoutDay({ date, workout, workouts, templates, onChang
       <header className="day-head" style={{ '--c': type.color }}>
         <div>
           <h2 className="day-title">{cap(fmtDate(date, { weekday: 'long', day: 'numeric', month: 'long' }))}</h2>
-          <select className="type-select" aria-label="Tipo de sesión" value={workout.type} onChange={(e) => changeType(e.target.value)}>
-            {Object.entries(DAY_TYPES).map(([k, t]) => <option key={k} value={k}>{t.label} — {t.long}</option>)}
-          </select>
+          <p className="muted">{type.long}</p>
         </div>
         <div className="day-stats">
           <span><b>{validSets.length}</b> series</span>
           <span><b>{Math.round(volume).toLocaleString('es-CL')}</b> kg totales</span>
         </div>
       </header>
+
+      <div className="day-tools">
+        <div className="type-chips" role="radiogroup" aria-label="Tipo de sesión">
+          {Object.entries(DAY_TYPES).map(([k, t]) => (
+            <button key={k} type="button" role="radio" aria-checked={workout.type === k} data-type={k} className={workout.type === k ? 'is-on' : ''} style={{ '--c': t.color }} onClick={() => changeType(k)}>{t.label}</button>
+          ))}
+        </div>
+        <div className={`timer ${running ? 'is-running' : ''}`}>
+          <button type="button" className="timer-main" onClick={timerToggle} aria-label={running ? 'Pausar cronómetro' : 'Iniciar cronómetro'}>
+            <span className="timer-ico">{running ? '❚❚' : '▶'}</span><b>{fmtClock(elapsed)}</b>
+          </button>
+          {!running && elapsed > 0 && <button type="button" className="timer-reset" onClick={timerReset} aria-label="Reiniciar cronómetro">×</button>}
+        </div>
+      </div>
 
       <ol className="ex-list" ref={listRef}>
         {workout.exercises.length === 0 && <li className="empty muted">Sin ejercicios. Agrega el primero abajo.</li>}

@@ -49,7 +49,7 @@ def t(pg):
 
 @case('steppers: desde vacío usa placeholder, clamp a cero')
 def t(pg):
-    fresh(pg, {"workouts": [wk(dshift(-2), 'push', 'chest-press', [{"kg": 50, "reps": 8}])], "templates": {}})
+    fresh(pg, {"workouts": [wk(dshift(-2), 'push', 'shoulder-press-machine', [{"kg": 50, "reps": 8}])], "templates": {}})
     pg.click('.type-btn >> nth=0')
     row = pg.locator('.ex').nth(0).locator('.set-row:not(.set-head)').nth(0)
     expect(kg_input(pg)).to_have_attribute('placeholder', '50')
@@ -94,19 +94,19 @@ def t(pg):
 @case('cambiar ejercicio: mismo músculo primero, nota de cambio, volver al original')
 def t(pg):
     fresh(pg); pg.click('.type-btn >> nth=0')
-    pg.locator('.ex').nth(0).locator('text=Cambiar').click()
+    pg.locator('.ex').nth(1).locator('text=Cambiar').click()
     expect(pg.locator('.sheet h3')).to_have_text('Reemplazar por')
     expect(pg.locator('.picker-muscle').first).to_have_text('Pecho')
     assert pg.locator('.picker-item', has_text='Chest press').count() == 0  # el actual no aparece
     assert pg.locator('.picker-item', has_text='Press inclinado con mancuernas').count() == 0  # ya está en la sesión
     pg.locator('.picker-item', has_text='Pec fly').count()  # pec fly está en plantilla -> excluido
     pg.locator('.picker-item', has_text='Press banca con barra').click()
-    expect(pg.locator('.ex').nth(0).locator('h3')).to_have_text('Press banca con barra')
-    expect(pg.locator('.ex').nth(0).locator('.swap-note')).to_contain_text('Cambio por Chest press')
+    expect(pg.locator('.ex').nth(1).locator('h3')).to_have_text('Press banca con barra')
+    expect(pg.locator('.ex').nth(1).locator('.swap-note')).to_contain_text('Cambio por Chest press')
     # volver al original
-    pg.locator('.ex').nth(0).locator('text=Cambiar').click()
+    pg.locator('.ex').nth(1).locator('text=Cambiar').click()
     pg.locator('.picker-item', has_text='Chest press').click()
-    expect(pg.locator('.ex').nth(0).locator('.swap-note')).to_have_count(0)
+    expect(pg.locator('.ex').nth(1).locator('.swap-note')).to_have_count(0)
 
 @case('cambiar ejercicio con datos pide confirmación')
 def t(pg):
@@ -117,7 +117,7 @@ def t(pg):
     pg.locator('.picker-item').first.click()
     expect(pg.locator('.sheet')).to_have_count(0)
     expect(kg_input(pg)).to_have_value('40')
-    expect(pg.locator('.ex').nth(0).locator('h3')).to_have_text('Chest press (máquina)')
+    expect(pg.locator('.ex').nth(0).locator('h3')).to_have_text('Shoulder press (máquina)')
     pg.once('dialog', lambda d: d.accept())
     pg.locator('.ex').nth(0).locator('text=Cambiar').click()
     pg.locator('.picker-item').first.click()
@@ -153,18 +153,18 @@ def t(pg):
 def t(pg):
     fresh(pg); pg.click('.type-btn >> nth=0')
     pg.once('dialog', lambda d: d.accept())
-    pg.select_option('.type-select', 'pull')
-    expect(pg.locator('.ex').nth(0).locator('h3')).to_contain_text('Jalón')
+    pg.click('.type-chips [data-type=pull]')
+    expect(pg.locator('.ex').nth(0).locator('h3')).to_contain_text('Dominadas')
     kg_input(pg).fill('30')
     dialogs = []
     pg.on('dialog', lambda d: (dialogs.append(d.message), d.dismiss()))
-    pg.select_option('.type-select', 'legs')
-    expect(pg.locator('.ex').nth(0).locator('h3')).to_contain_text('Jalón')
+    pg.click('.type-chips [data-type=legs]')
+    expect(pg.locator('.ex').nth(0).locator('h3')).to_contain_text('Dominadas')
     assert dialogs == [], dialogs
     kg_input(pg).fill('')
-    pg.select_option('.type-select', 'push')
-    expect(pg.locator('.ex').nth(0).locator('h3')).to_contain_text('Jalón')  # rechazó recargar
-    expect(pg.locator('.type-select')).to_have_value('push')
+    pg.click('.type-chips [data-type=push]')
+    expect(pg.locator('.ex').nth(0).locator('h3')).to_contain_text('Dominadas')  # rechazó recargar
+    expect(pg.locator('.type-chips [data-type=push]')).to_have_attribute('aria-checked', 'true')
 
 @case('calendario: 30 meses adelante/atrás, cruzar año, seleccionar en otro mes, Ir a hoy, tab Sesiones vuelve a hoy')
 def t(pg):
@@ -215,12 +215,12 @@ def t(pg):
         {"date": "2026-09-01", "type": "push", "exercises": []},  # duplicado de fecha
         {"date": "not-a-date"}, "string", None,
         {"date": "2026-09-02", "type": "legs", "exercises": [{"exId": "no-existe", "sets": [{"kg": 10, "reps": 10}]}]}],
-        "templates": {"push": ["chest-press", "no-existe", "chest-press", 5], "legs": "nope"}}
+        "tv": 2, "templates": {"push": ["chest-press", "no-existe", "chest-press", 5], "legs": "nope"}}
     fresh(pg, garbage)
     st = json.loads(pg.evaluate("localStorage.getItem('sesion:v1')"))
     assert len(st['workouts']) == 2 and st['workouts'][0]['type'] == 'otro'
     assert st['workouts'][0]['exercises'][0]['sets'] == [{"kg": "", "reps": "", "done": False}, {"kg": "", "reps": "", "done": False}, {"kg": "40.5", "reps": "8", "done": False}]
-    assert st['templates']['push'] == ['chest-press'] and len(st['templates']['legs']) == 7
+    assert st['templates']['push'] == ['chest-press'] and len(st['templates']['legs']) == 8
     pg.click('button[aria-label="Mes anterior"]') if today() < '2026-09-01' else None
     pg.locator('.cal-day', has_text='2').first.click()
     expect(pg.locator('.ex h3').first).to_have_text('Ejercicio desconocido')
@@ -235,7 +235,7 @@ def t(pg):
     pg.wait_for_timeout(300); assert any('formato' in m for m in msgs), msgs
     pg.set_input_files('input[type=file]', {'name': 'x.json', 'mimeType': 'application/json', 'buffer': b'not json'})
     pg.wait_for_timeout(300); assert sum('formato' in m for m in msgs) == 2, msgs
-    good = json.dumps({"workouts": [wk(dshift(-1), 'legs', 'leg-press', [{"kg": 100, "reps": 12}])], "templates": {"push": ["pec-fly"]}}).encode()
+    good = json.dumps({"workouts": [wk(dshift(-1), 'legs', 'leg-press', [{"kg": 100, "reps": 12}])], "tv": 2, "templates": {"push": ["pec-fly"]}}).encode()
     pg.set_input_files('input[type=file]', {'name': 'x.json', 'mimeType': 'application/json', 'buffer': good})
     pg.wait_for_timeout(300)
     expect(pg.locator('.tpl-list li')).to_have_count(1)
@@ -246,15 +246,15 @@ def t(pg):
     fresh(pg); pg.click('nav >> text=Rutinas')
     first = pg.locator('.tpl-list li').first
     first.locator('button[aria-label="Subir"]').click()  # borde: no cambia
-    expect(pg.locator('.tpl-list li').first).to_contain_text('Chest press')
+    expect(pg.locator('.tpl-list li').first).to_contain_text('Shoulder press')
     first.locator('button[aria-label="Bajar"]').click()
-    expect(pg.locator('.tpl-list li').nth(1)).to_contain_text('Chest press')
+    expect(pg.locator('.tpl-list li').nth(1)).to_contain_text('Shoulder press')
     pg.locator('.tpl-list li').last.locator('button[aria-label="Bajar"]').click()
     for _ in range(7): pg.locator('.tpl-list li button[aria-label="Quitar"]').first.click()
     expect(pg.locator('.tpl-list')).to_contain_text('Vacío')
     pg.click('text=+ Agregar ejercicio'); pg.fill('.search', 'hack'); pg.locator('.picker-item').first.click()
     expect(pg.locator('.tpl-list li')).to_have_count(1)
-    pg.click('.seg >> text=Legs'); expect(pg.locator('.tpl-list li')).to_have_count(7)
+    pg.click('.seg >> text=Legs'); expect(pg.locator('.tpl-list li')).to_have_count(8)
     pg.click('nav >> text=Sesiones'); pg.click('.type-btn >> nth=0')
     expect(pg.locator('.ex')).to_have_count(1); expect(pg.locator('.ex h3')).to_have_text('Hack squat')
 
@@ -293,10 +293,50 @@ def t(pg):
     pg.fill('.note', 'a' * 2500)
     assert len(pg.locator('.note').input_value()) == 2000
 
+@case('cronómetro: inicia con la primera serie hecha, pausa, persiste tras recarga, reset')
+def t(pg):
+    fresh(pg); pg.click('.type-btn >> nth=0')
+    expect(pg.locator('.timer-main b')).to_have_text('0:00')
+    pg.locator('.set-n').first.click()
+    expect(pg.locator('.timer.is-running')).to_have_count(1)
+    pg.wait_for_timeout(2200); expect(pg.locator('.timer-main b')).to_contain_text('0:0')
+    assert pg.locator('.timer-main b').inner_text() != '0:00'
+    pg.click('.timer-main'); expect(pg.locator('.timer.is-running')).to_have_count(0)
+    shown = pg.locator('.timer-main b').inner_text()
+    pg.reload(); pg.wait_for_selector('.timer-main')
+    expect(pg.locator('.timer-main b')).to_have_text(shown)
+    pg.click('.timer-reset'); expect(pg.locator('.timer-main b')).to_have_text('0:00')
+    pg.click('.timer-main'); pg.reload(); pg.wait_for_selector('.timer.is-running')  # sigue corriendo tras recargar
+
+@case('cobertura: cuerpo gris sin datos, se pinta con series, grupos faltantes, ventana 14 días')
+def t(pg):
+    fresh(pg); pg.click('nav >> text=Progreso')
+    expect(pg.locator('.body-m.lvl-0')).to_have_count(14)
+    expect(pg.locator('.coverage')).to_contain_text('0 de 13')
+    fresh(pg, {"workouts": [wk(dshift(-2), 'push', 'chest-press', [{"kg": 40, "reps": 10}] * 3), wk(dshift(-10), 'legs', 'leg-press', [{"kg": 100, "reps": 10}] * 7)], "templates": {}})
+    pg.click('nav >> text=Progreso')
+    expect(pg.locator('.coverage')).to_contain_text('1 de 13')
+    expect(pg.locator('.body-m.lvl-1')).to_have_count(1)
+    expect(pg.locator('.cov-list li.is-missing')).to_have_count(12)
+    pg.click('.seg.small >> text=14 días')
+    expect(pg.locator('.coverage')).to_contain_text('2 de 13')
+    expect(pg.locator('.body-m.lvl-2')).to_have_count(1)
+
+@case('rutinas por defecto: clásicos primero y migración de versión')
+def t(pg):
+    fresh(pg, {"workouts": [], "templates": {"push": ["skullcrusher"]}})  # sin tv → se reemplaza
+    pg.click('nav >> text=Rutinas')
+    expect(pg.locator('.tpl-list li').nth(0)).to_contain_text('Shoulder press')
+    expect(pg.locator('.tpl-list li').nth(1)).to_contain_text('Chest press')
+    expect(pg.locator('.tpl-list li').nth(2)).to_contain_text('Fondos de tríceps')
+    fresh(pg, {"workouts": [], "templates": {"push": ["skullcrusher"]}, "tv": 2})  # misma versión → se respeta
+    pg.click('nav >> text=Rutinas')
+    expect(pg.locator('.tpl-list li')).to_have_count(1)
+
 @case('escritorio 1280px renderiza sin errores')
 def t(pg):
     pg.set_viewport_size({'width': 1280, 'height': 800}); fresh(pg); pg.click('.type-btn >> nth=1')
-    expect(pg.locator('.ex')).to_have_count(7); pg.set_viewport_size({'width': 390, 'height': 844})
+    expect(pg.locator('.ex')).to_have_count(9); pg.set_viewport_size({'width': 390, 'height': 844})
 
 # ---- runner ----
 with sync_playwright() as p:
@@ -313,7 +353,7 @@ with sync_playwright() as p:
             if len(errors) > before: raise AssertionError('errores JS: ' + '; '.join(errors[before:]))
             passed += 1; print('PASS', name)
         except Exception as e:
-            failed += 1; print('FAIL', name, '->', str(e).splitlines()[0][:300])
+            failed += 1; print('FAIL', name, '->', (str(e).splitlines() or [repr(e)])[0][:300])
         pg.close()
     print(f'\n{passed} pasaron, {failed} fallaron')
     b.close()

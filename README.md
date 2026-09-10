@@ -29,17 +29,19 @@ para moverlos entre dispositivos.
 ## Estructura
 - `src/data/exercises.js` — catálogo, tipos de día y plantillas por defecto
 - `src/storage.js` — persistencia, export/import, 1RM estimado (Epley)
-- `src/components/` — Calendar, WorkoutDay, ExercisePicker, Progress, Templates
+- `src/components/` — Calendar, WorkoutDay (series, tipo de día, cronómetro), ExercisePicker, Progress, BodyMap (cobertura muscular), Templates
 
 ## Modelo de datos
 ```js
 { workouts: [{ id, date: 'YYYY-MM-DD', type: 'push'|'pull'|'legs'|'otro', note,
-    exercises: [{ rowId, exId, plannedId /* si hubo cambio */, sets: [{ kg, reps }] }] }],
-  templates: { push: [exId...], pull: [...], legs: [...], otro: [] } }
+    timer: { startedAt: ms|null, acc: segundos },   // cronómetro de sesión
+    exercises: [{ rowId, exId, plannedId /* si hubo cambio */, sets: [{ kg, reps, done }] }] }],
+  templates: { push: [exId...], pull: [...], legs: [...], otro: [] },
+  tv: 2 }  // versión de las rutinas por defecto; si no coincide con TEMPLATES_VERSION se reemplazan
 ```
 
 ## QA automatizado
-`qa/qa.py` es una suite end-to-end con Playwright (Python) que cubre 20 flujos:
+`qa/qa.py` es una suite end-to-end con Playwright (Python) que cubre 23 flujos:
 inputs y validación, steppers, series, cambio/quitar ejercicio, cambio de tipo de día,
 calendario, persistencia con datos corruptos, import/export, rutinas y clics en ráfaga.
 ```bash
