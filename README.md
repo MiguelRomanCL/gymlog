@@ -1,6 +1,8 @@
 # Sesión — registro de entrenamiento
 
 App web (PWA) para registrar sesiones de gimnasio con split Push / Pull / Legs.
+Interfaz oscura estilo gimnasio: modo entrenamiento (un ejercicio a la vez), cuerpo humano con
+cobertura muscular en el inicio, la sesión, el resumen y una pestaña propia.
 
 **App en línea:** https://miguelromancl.github.io/gymlog/ (se despliega sola con cada push a `main`).
 Catálogo de ejercicios basado en las máquinas y áreas habituales de Smart Fit.
@@ -29,19 +31,21 @@ para moverlos entre dispositivos.
 ## Estructura
 - `src/data/exercises.js` — catálogo, tipos de día y plantillas por defecto
 - `src/storage.js` — persistencia, export/import, 1RM estimado (Epley)
-- `src/components/` — Calendar, WorkoutDay (series, tipo de día, cronómetro), ExercisePicker, Progress, BodyMap (cobertura muscular), Templates
+- `src/lib/logic.js` — estadísticas por músculo, sugerencia del día, semanas, sesiones nuevas
+- `src/components/` — Calendar (semana/mes), StartDay (inicio con cuerpo y sugerencia), Session (modo entrenamiento, lista, cronómetro, resumen), Body (silueta SVG), BodyMap (pestaña Cuerpo), ExercisePicker, Progress, Templates
 
 ## Modelo de datos
 ```js
 { workouts: [{ id, date: 'YYYY-MM-DD', type: 'push'|'pull'|'legs'|'otro', note,
     timer: { startedAt: ms|null, acc: segundos },   // cronómetro de sesión
+    finished: bool,                                  // guardada desde el resumen
     exercises: [{ rowId, exId, plannedId /* si hubo cambio */, sets: [{ kg, reps, done }] }] }],
   templates: { push: [exId...], pull: [...], legs: [...], otro: [] },
   tv: 2 }  // versión de las rutinas por defecto; si no coincide con TEMPLATES_VERSION se reemplazan
 ```
 
 ## QA automatizado
-`qa/qa.py` es una suite end-to-end con Playwright (Python) que cubre 23 flujos:
+`qa/qa.py` es una suite end-to-end con Playwright (Python) que cubre 26 flujos:
 inputs y validación, steppers, series, cambio/quitar ejercicio, cambio de tipo de día,
 calendario, persistencia con datos corruptos, import/export, rutinas y clics en ráfaga.
 ```bash

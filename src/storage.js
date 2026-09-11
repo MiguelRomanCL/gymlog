@@ -44,6 +44,7 @@ function cleanWorkout(w) {
     note: typeof w.note === 'string' ? w.note : '',
     exercises: Array.isArray(w.exercises) ? w.exercises.map(cleanRow).filter(Boolean) : [],
     timer: cleanTimer(w.timer),
+    finished: !!w.finished,
   }
 }
 

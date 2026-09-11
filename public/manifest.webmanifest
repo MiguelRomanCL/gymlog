@@ -3,7 +3,7 @@
   "short_name": "Sesión",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#E9EAEC",
-  "theme_color": "#E9EAEC",
+  "background_color": "#0F1114",
+  "theme_color": "#0F1114",
   "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
 }

@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { EX_BY_ID, EXERCISES } from '../data/exercises'
 import { bestSet, e1rm, fmtDate, num, setIsValid } from '../storage'
-import BodyMap from './BodyMap'
 
 export default function Progress({ workouts }) {
   // Ejercicios con datos, ordenados por frecuencia
@@ -40,8 +39,7 @@ export default function Progress({ workouts }) {
   if (withData.length === 0 || series.length === 0) {
     return (
       <section className="progress">
-        <BodyMap workouts={workouts} />
-      <h2>Por ejercicio</h2>
+        <header className="s-head"><div><h1 className="d">Progreso</h1></div></header>
         <p className="muted">Todavía no hay series con peso y reps. Registra una sesión y acá verás cómo avanza cada ejercicio.</p>
       </section>
     )
@@ -54,8 +52,7 @@ export default function Progress({ workouts }) {
 
   return (
     <section className="progress">
-      <BodyMap workouts={workouts} />
-      <h2>Por ejercicio</h2>
+      <header className="s-head"><div><h1 className="d">Progreso</h1></div></header>
       <select className="type-select" value={exId} onChange={(e) => setExId(e.target.value)}>
         {withData.map((id) => <option key={id} value={id}>{EX_BY_ID[id]?.name || id}</option>)}
       </select>

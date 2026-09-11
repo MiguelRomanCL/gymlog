@@ -83,10 +83,10 @@ export const EXERCISES = [
 export const EX_BY_ID = Object.fromEntries(EXERCISES.map((e) => [e.id, e]))
 
 export const DAY_TYPES = {
-  push: { label: 'Push', long: 'Pecho, hombro, tríceps', color: '#D6321E' },
-  pull: { label: 'Pull', long: 'Espalda, hombro posterior, bíceps', color: '#1F5FBF' },
-  legs: { label: 'Legs', long: 'Pierna y glúteo', color: '#1E8A5A' },
-  otro: { label: 'Otro', long: 'Sesión libre', color: '#6B7078' },
+  push: { label: 'Push', long: 'Pecho, hombro, tríceps', color: '#FF7A59' },
+  pull: { label: 'Pull', long: 'Espalda, hombro posterior, bíceps', color: '#5AA9FF' },
+  legs: { label: 'Legs', long: 'Pierna y glúteo', color: '#3ED598' },
+  otro: { label: 'Otro', long: 'Sesión libre', color: '#8A9099' },
 }
 
 // Plantillas iniciales (editables desde la app). Los clásicos van primero.

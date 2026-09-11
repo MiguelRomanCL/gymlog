@@ -1,5 +1,5 @@
 // Cache-first service worker: la app funciona sin conexión una vez cargada.
-const CACHE = 'sesion-v1'
+const CACHE = 'sesion-v2'
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', './index.html'])))
   self.skipWaiting()

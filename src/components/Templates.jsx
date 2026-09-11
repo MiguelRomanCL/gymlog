@@ -17,7 +17,7 @@ export default function Templates({ state, onTemplates, onImport }) {
 
   return (
     <section className="templates">
-      <h2>Rutinas</h2>
+      <header className="s-head"><div><h1 className="d">Rutinas</h1></div></header>
       <p className="muted">Lo que se carga por defecto al iniciar cada tipo de día. Cambiarlo no afecta sesiones ya registradas.</p>
       <div className="seg">
         {['push', 'pull', 'legs', 'otro'].map((k) => (
@@ -40,7 +40,7 @@ export default function Templates({ state, onTemplates, onImport }) {
       <button className="btn-secondary wide" onClick={() => setAdding(true)}>+ Agregar ejercicio</button>
       {adding && <ExercisePicker exclude={list} onPick={(id) => { set([...list, id]); setAdding(false) }} onClose={() => setAdding(false)} />}
 
-      <h2 style={{ marginTop: 40 }}>Datos</h2>
+      <h2 className="d" style={{ marginTop: 32 }}>Datos</h2>
       <p className="muted">Todo se guarda en este dispositivo. Exporta un respaldo de vez en cuando o para pasarlo a otro aparato.</p>
       <div className="row-btns">
         <button className="btn-secondary" onClick={() => exportJSON(state)}>Exportar respaldo</button>

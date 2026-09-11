@@ -1,0 +1,26 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "B + cuerpo" },
+    { "id": "page-2", "name": "Descartadas (A, C, D)" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "title": "B · Sesión (base elegida)", "x": 0, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "CuerpoInicio.dc.html", "title": "1 · Inicio con cuerpo", "x": 520, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "CuerpoFranja.dc.html", "title": "2 · Franja en la sesión", "x": 1040, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "CuerpoGlifo.dc.html", "title": "3 · Músculo por ejercicio", "x": 1560, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "CuerpoResumen.dc.html", "title": "4 · Resumen al terminar", "x": 2080, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "CuerpoTab.dc.html", "title": "5 · Pestaña Cuerpo", "x": 2600, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "DirectionA.dc.html", "title": "A · Rutina clara", "x": 0, "y": 0, "w": 390, "h": 844, "page": "page-2" },
+    { "file": "DirectionC.dc.html", "title": "C · Cuerpo primero", "x": 520, "y": 0, "w": 390, "h": 844, "page": "page-2" },
+    { "file": "DirectionD.dc.html", "title": "D · Cuaderno rápido", "x": 1040, "y": 0, "w": 390, "h": 844, "page": "page-2" }
+  ],
+  "annotations": [
+    { "id": "intro-b", "x": 0, "y": -380, "w": 480, "page": "page-1", "text": "Dirección B elegida. A la derecha, cinco maneras de meter el cuerpo, todas con la misma estética. No son excluyentes: lo normal sería combinar 2 o 3 (por ejemplo 1 + 3 + 4)." },
+    { "id": "n1", "x": 520, "y": -200, "w": 390, "page": "page-1", "text": "1 · Inicio con cuerpo\nAntes de entrenar ves el cuerpo con lo cubierto en la semana y la app te dice qué toca y por qué.\n\n+ Responde \"qué me toca\" con una mirada.\n− Una pantalla más antes de cargar pesos." },
+    { "id": "n2", "x": 1040, "y": -200, "w": 390, "page": "page-1", "text": "2 · Franja en la sesión\nDos cuerpos chicos arriba de la sesión que se van encendiendo con cada serie hecha. Chips con las series por músculo de hoy.\n\n+ Feedback en vivo mientras entrenas.\n− Ocupa espacio en la pantalla más usada." },
+    { "id": "n3", "x": 1560, "y": -200, "w": 390, "page": "page-1", "text": "3 · Músculo por ejercicio\nCada ejercicio lleva un glifo del cuerpo con su músculo iluminado, también en \"Siguiente\".\n\n+ Casi no ocupa espacio, se ve pro.\n− No dice nada de la semana." },
+    { "id": "n4", "x": 2080, "y": -200, "w": 390, "page": "page-1", "text": "4 · Resumen al terminar\nAl cerrar la sesión: el cuerpo con lo que encendiste hoy, números de la sesión y récords.\n\n+ Momento de recompensa, motivador.\n− Solo se ve una vez por sesión." },
+    { "id": "n5", "x": 2600, "y": -200, "w": 390, "page": "page-1", "text": "5 · Pestaña Cuerpo\nUna pestaña propia: mapa de calor a 7/14/30 días y lista por músculo con alertas de lo abandonado. Es lo que hoy vive en Progreso, en oscuro.\n\n+ Vista completa cuando la quieres.\n− Hay que ir a buscarla." }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}
